@@ -1,26 +1,23 @@
 package com.example.greetingapp.controller;
 
 import com.example.greetingapp.model.Greeting;
+import com.example.greetingapp.model.User;
+import com.example.greetingapp.service.IGreetingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class GreetingController {
-    private static final String template = "Hello,%s!";
-    private final AtomicLong counter = new AtomicLong();
 
-    @GetMapping("/greeting")
-    public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-        return new Greeting(counter.incrementAndGet(), String.format(template, name));
-    }
-
-    @GetMapping(" ")
-    public String blankGreeting() {
-        return "Hello World!!!";
-    }
+    // UC-3 method
     @GetMapping("/greeting/")
     public Greeting greetingForName(@RequestParam(value = "firstName", required = false) String firstName, @RequestParam(value = "lastName", required = false) String lastName) {
         if(firstName == null && lastName == null) {
@@ -33,6 +30,32 @@ public class GreetingController {
             return new Greeting(counter.incrementAndGet(),String.format(template, firstName));
         }
         return new Greeting(counter.incrementAndGet(), String.format(template, firstName + " " + lastName));
+    }
+
+
+
+    private static final String template = "Hello, %s !!!";
+    private final AtomicLong counter = new AtomicLong();
+
+    @GetMapping("/addgreeting")
+    public Greeting addGreeting(@RequestParam(value = "name", defaultValue = "World") String name) {
+        User user = new User();
+        user.setFirstName(name);
+        return greetingService.addGreeting(user);
+    }
+
+    @GetMapping(" ")
+    public String blankGreeting() {
+        return "Hello Stranger!!!";
+    }
+
+    @Autowired
+    public IGreetingService greetingService;
+
+    @GetMapping("/allgreetings")
+    public ResponseEntity<List<Greeting>> allGreetings(){
+        List<Greeting> messageList = greetingService.getGreetings();
+        return new ResponseEntity<>(messageList, HttpStatus.ACCEPTED);
     }
 
 }
