@@ -10,5 +10,6 @@ public interface IGreetingService {
     public Greeting addGreeting(User user);
 
     public List<Greeting> getGreetings();
-
+    public Greeting findGreeting(long id);
+    public Greeting updateGreeting(User user, long id);
 }
