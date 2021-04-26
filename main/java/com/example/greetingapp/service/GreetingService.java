@@ -32,6 +32,8 @@ import java.util.concurrent.atomic.AtomicLong;
         public Greeting updateGreeting(User user, long id) {
             return greetingRepository.save(new Greeting(id, String.format(template, (user.getFirstName().isEmpty())? " World" : user.getFirstName())));
         }
-
+        public void deleteGreetingById(long id) {
+            greetingRepository.deleteById(id);
+        }
 
     }

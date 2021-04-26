@@ -69,5 +69,8 @@ public class GreetingController {
         user.setFirstName(user.getFirstName());
         return greetingService.updateGreeting(user, id);
     }
-
+    @DeleteMapping("/deletegreeting/{id}")
+    public void deleteGreeting(@PathVariable(name = "id") long id) {
+        greetingService.deleteGreetingById(id);
+    }
 }
